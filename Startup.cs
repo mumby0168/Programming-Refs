@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Programming_Reference_Website.Factories;
+using Programming_Reference_Website.Factories.Interfaces;
 using Programming_Reference_Website.Models;
 using Programming_Reference_Website.Persistance;
 using Programming_Reference_Website.Services;
@@ -44,6 +46,7 @@ namespace Programming_Reference_Website
             });
 
             services.AddScoped<IPasswordProtectionService, PasswordProtectionService>();
+            services.AddTransient<IUnitOfWorkFactory, UnitOfWorkFactory>();
             
         }
 

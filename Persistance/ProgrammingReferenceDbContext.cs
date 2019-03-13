@@ -5,7 +5,7 @@ namespace Programming_Reference_Website.Persistance
 {
     public class ProgrammingReferenceDbContext : DbContext
     {
-        public ProgrammingReferenceDbContext(DbContextOptions options) : base(options) {}
+        public ProgrammingReferenceDbContext(DbContextOptions<ProgrammingReferenceDbContext> options) : base(options) {}
         public DbSet<User> Users { get; set; }
 
         

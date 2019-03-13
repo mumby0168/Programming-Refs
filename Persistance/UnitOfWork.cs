@@ -14,6 +14,11 @@ namespace Programming_Reference_Website.Persistance
 
             UserRepository = new UserRepository(context);
         }
+        public UnitOfWork(IUserRepository userRepository)
+        {
+            this.UserRepository = userRepository;
+
+        }
         public IUserRepository UserRepository { get; }
 
         public int Complete()
@@ -24,6 +29,11 @@ namespace Programming_Reference_Website.Persistance
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }
