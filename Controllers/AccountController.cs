@@ -14,6 +14,8 @@ namespace Programming_Reference_Website.Controllers
         [HttpPost]
         public IActionResult Add([FromBody]CreateUserViewModel createUserViewModel)
         {
+
+            var request = HttpContext.Request;
             Debug.WriteLine(createUserViewModel);
 
             return CreatedAtAction("Add", "hi");

@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { CreateUserViewModel } from './../models/viewModels/createUser.viewModel';
+import { CreateUserViewModel } from '../viewModels/createUser.viewModel';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
