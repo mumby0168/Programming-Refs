@@ -36,7 +36,7 @@ export class CreateUserAccountComponent implements OnInit {
   onSubmit() {
     console.log("post");
     console.log(this.diagnostics)
-    this.client.post(this.baseUrl + 'api/Account', this.diagnostics, this.headerOptions).subscribe(res => console.log(res));
+    this.client.post(this.baseUrl + 'api/Account/Create', this.diagnostics, this.headerOptions).subscribe(res => console.log(res));
   }
 
 

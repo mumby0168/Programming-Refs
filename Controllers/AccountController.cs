@@ -4,38 +4,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Programming_Reference_Website.Models.ViewModels;
+using Programming_Reference_Website.Services.Interfaces;
 
 namespace Programming_Reference_Website.Controllers
 {
-    [Route("api/[controller]")]    
+    [Route("api/[controller]/[action]")]    
     [Produces("application/json")]
     public class AccountController : Controller
     {
-        [HttpPost]
-        public IActionResult Add([FromBody]CreateUserViewModel createUserViewModel)
+        private readonly IAuthenticationService _authenticationService;
+
+        public AccountController(IAuthenticationService authenticationService)
         {
-
-            var request = HttpContext.Request;
-            Debug.WriteLine(createUserViewModel);
-
-            return CreatedAtAction("Add", "hi");
+            _authenticationService = authenticationService;
         }
 
-        [HttpGet("[action]")]
-        public IEnumerable<CreateUserViewModel> GetUsers()
+        public IActionResult Create([FromBody]CreateUserViewModel createUserViewModel)
         {
-            var user = new CreateUserViewModel()
-            {
-                Email = "billy",
-                Password = "billy",
-                PasswordReEntered = "billy",
-                FriendlyName = "billy"
-            };
+            return Ok();
+        }        
 
-            return new List<CreateUserViewModel>()
-            {
-                user
-            };
+        public IActionResult Login([FromBody]LoginViewModel loginViewModel)
+        {
+            
+            bool successfulLogin = _authenticationService.Login(loginViewModel.Email, loginViewModel.Password, HttpContext);
+            if(successfulLogin) return Ok();
+
+            return Unauthorized();     
+        }
+
+        public IActionResult Logout()
+        {
+            return Ok();
         }
     }
 }
