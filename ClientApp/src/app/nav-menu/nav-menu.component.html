@@ -27,6 +27,11 @@
                         <span class='glyphicon glyphicon-th-list'></span> Fetch data
                     </a>
                 </li>
+                <li [routerLinkActive]='["link-active"]'>
+                  <a [routerLink]='["/create-account"]' (click)='collapse()'>
+                      <span class='glyphicon glyphicon-th-list'></span> Create Account
+                  </a>
+              </li>
             </ul>
         </div>
     </div>

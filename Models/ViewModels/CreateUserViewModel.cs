@@ -2,7 +2,7 @@ namespace Programming_Reference_Website.Models.ViewModels
 {
     public class CreateUserViewModel
     {
-        public string FreindlyName { get; set; }
+        public string FriendlyName { get; set; }
         
         public string Email { get; set; }
 
