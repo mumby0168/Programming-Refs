@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Programming_Reference_Website.Factories.Interfaces;
 using Programming_Reference_Website.Models;
 
 namespace Programming_Reference_Website.Controllers
@@ -10,52 +11,79 @@ namespace Programming_Reference_Website.Controllers
     [Route("api/topics/[action]")]
     public class TopicsController : Controller
     {
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+
+        public TopicsController(IUnitOfWorkFactory unitOfWorkFactory)
+        {
+            _unitOfWorkFactory = unitOfWorkFactory;
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            Debug.WriteLine("get" + id);
-            return null;
+             using(var uow = _unitOfWorkFactory.GetInstance())
+            {
+                var topic = await uow.TopicRepository.GetAsync(id);                
+                // TODO: Possibly think if null different response.
+                return Ok(topic);
+            }     
         }
         
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            
-            return Ok(new List<Topic>
+            using(var uow = _unitOfWorkFactory.GetInstance())
             {
-                new Topic{
-                    Name = "ASP.NET CORE",
-                    Id = 1,
-                    Description = "This is the new web tech that this website is written in."
-                },
-                new Topic{
-                    Name = "EF CORE",
-                    Id = 2,
-                    Description = "This is the new tech that this database is written in."
-                }
-            });
+                var topics = await uow.TopicRepository.GetAllAysnc();
+                return Ok(topics);
+            }                    
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Topic topic)
         {
-            Debug.WriteLine("add" + topic.Name);
-            return null;
+            using(var uow = _unitOfWorkFactory.GetInstance())
+            {
+                await uow.TopicRepository.AddAysnc(topic);
+                
+                await uow.CompleteAsync();
+                
+                return Ok(true);
+            }     
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] Topic topic)
         {
-            Debug.WriteLine("update" + topic.Name);
-            return null;
+            using(var uow = _unitOfWorkFactory.GetInstance())
+            {
+                var topicFromDb = await uow.TopicRepository.GetAsync(topic.Id);
+
+                //TODO: Implement AutoMapper<F, T>
+                topicFromDb.Name = topic.Name;
+                topicFromDb.Description = topic.Description;
+                topicFromDb.TopicLanguages = topic.TopicLanguages;
+                topicFromDb.WebResources = topic.WebResources;                
+                
+                await uow.CompleteAsync();
+                
+                return Ok(true);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            Debug.WriteLine("delete" + id);
-            return null;
+            using(var uow = _unitOfWorkFactory.GetInstance())
+            {
+                var topic = await uow.TopicRepository.GetAsync(id);
+                
+                await uow.TopicRepository.RemoveAysnc(topic);
+                
+                await uow.CompleteAsync();
+                
+                return Ok(true);
+            }
         }
     }
 }

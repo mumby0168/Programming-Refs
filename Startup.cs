@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -68,7 +69,15 @@ namespace Programming_Reference_Website
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
-            }                        
+            }              
+
+
+
+            var factory = (UnitOfWorkFactory)serviceProvider.GetService(typeof(IUnitOfWorkFactory));
+            using(var uow = factory.GetInstance())
+            {
+           
+            }          
             
 
             app.UseHttpsRedirection();
