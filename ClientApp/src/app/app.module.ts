@@ -14,6 +14,7 @@ import { CreateUserAccountComponent } from './authentication/create-user-account
 import { LoginComponent } from '././authentication/login/login.component';
 import { AutheticationGuard } from './authentication/authentication.guard';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { TopicsModule } from './topics/topics.module';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     AuthenticationModule,
+    TopicsModule,
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
