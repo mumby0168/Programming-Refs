@@ -13,13 +13,12 @@ namespace Programming_Reference_Website.Persistance
             _context = context;
 
             UserRepository = new UserRepository(context);
+            TopicRepository = new TopicRepository(context);
         }
-        public UnitOfWork(IUserRepository userRepository)
-        {
-            this.UserRepository = userRepository;
 
-        }
         public IUserRepository UserRepository { get; }
+
+        public ITopicRepository TopicRepository { get; }
 
         public int Complete()
         {
