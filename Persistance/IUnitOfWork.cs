@@ -8,6 +8,8 @@ namespace Programming_Reference_Website.Persistance
     {
          IUserRepository UserRepository { get; }
 
+         ITopicRepository TopicRepository { get; }
+
          int Complete();
 
          Task<int> CompleteAsync();
