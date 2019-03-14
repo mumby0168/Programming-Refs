@@ -1,3 +1,6 @@
+import { Router } from '@angular/router';
+import { CurrentUser } from './../user/current.user';
+import { AuthenticationService } from './../authentication/services/authentication-service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -8,11 +11,25 @@ import { Component } from '@angular/core';
 export class NavMenuComponent {
   isExpanded = false;
 
+  constructor(public authService: AuthenticationService, public currentUser: CurrentUser, private router: Router) {}
+
   collapse() {
     this.isExpanded = false;
   }
 
   toggle() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  logout() {
+    this.authService.logout().subscribe(
+      res => {
+        if (res) {
+          this.router.navigateByUrl('/account/login');
+          this.authService.isAuthenticated = false;
+          this.currentUser.email = '';
+        }
+      },
+      error => console.log(error.error));
   }
 }

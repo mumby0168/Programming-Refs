@@ -19,8 +19,21 @@
                 </li>
                 <li [routerLinkActive]='["link-active"]'>
                   <a [routerLink]='["/account/create"]' (click)='collapse()'>
-                      <span class='glyphicon glyphicon-th-list'></span> Create Account
+                       Register
                   </a>
+              </li>
+              <li [routerLinkActive]='["link-active"]'>
+                  <a [routerLink]='["/account/login"]' (click)='collapse()'>
+                    Login
+                  </a>
+              </li>
+              <li *ngIf="this.authService.isAuthenticated">
+                  <a (click)='logout()'>
+                    Logout
+                  </a>
+              </li>
+              <li *ngIf="this.authService.isAuthenticated">
+                    {{currentUser.email}}
               </li>
             </ul>
         </div>

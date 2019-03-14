@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Programming_Reference_Website.Models.ViewModels;
 using Programming_Reference_Website.Services.Interfaces;
@@ -12,30 +13,43 @@ namespace Programming_Reference_Website.Controllers
     [Produces("application/json")]
     public class AccountController : Controller
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly Services.Interfaces.IAuthenticationService _authenticationService;
 
-        public AccountController(IAuthenticationService authenticationService)
+        public AccountController(Services.Interfaces.IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
         }
 
-        public IActionResult Create([FromBody]CreateUserViewModel createUserViewModel)
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody]CreateUserViewModel createUserViewModel)
         {
-            return Ok();
+            if(createUserViewModel.Password == createUserViewModel.PasswordReEntered)
+            {
+                var result = await _authenticationService.Register(createUserViewModel.Email, createUserViewModel.Password, createUserViewModel.FriendlyName);
+                if(result)
+                {
+                    return Ok("nice one!");
+                }
+            }
+
+            return BadRequest();
         }        
 
-        public IActionResult Login([FromBody]LoginViewModel loginViewModel)
-        {
-            
-            bool successfulLogin = _authenticationService.Login(loginViewModel.Email, loginViewModel.Password, HttpContext);
-            if(successfulLogin) return Ok();
+
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody]LoginViewModel loginViewModel)
+        {            
+            bool successfulLogin = await _authenticationService.Login(loginViewModel.Email, loginViewModel.Password, HttpContext);
+            if(successfulLogin) return Ok(true);
 
             return Unauthorized();     
         }
 
-        public IActionResult Logout()
+        [HttpPost]
+        public async Task<IActionResult> Logout()
         {
-            return Ok();
+            await HttpContext.SignOutAsync();
+            return Ok(true);
         }
     }
 }

@@ -9,6 +9,8 @@ export class AutheticationGuard {
 
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
+    this.authenticationService.checkCookie();
+
     if (this.authenticationService.isAuthenticated) {
       return true;
     } else {

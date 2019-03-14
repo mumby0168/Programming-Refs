@@ -1,10 +1,11 @@
+import { CurrentUser } from './user/current.user';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from'@angular/forms'
+import { FormsModule } from'@angular/forms';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -12,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { CreateUserAccountComponent } from './authentication/create-user-account/create-user-account.component';
 import { LoginComponent } from '././authentication/login/login.component';
 import { AutheticationGuard } from './authentication/authentication.guard';
+import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 
 @NgModule({
@@ -39,7 +41,9 @@ import { AutheticationGuard } from './authentication/authentication.guard';
     ])
   ],
   providers: [
-    AutheticationGuard
+    AutheticationGuard,
+    CurrentUser,
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

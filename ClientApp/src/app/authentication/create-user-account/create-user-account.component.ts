@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CreateUserViewModel } from '../viewModels/createUser.viewModel';
 import { Component, OnInit, Inject } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import "rxjs/add/operator/map";
 
 
 @Component({
@@ -17,26 +17,18 @@ export class CreateUserAccountComponent implements OnInit {
 
   constructor(public client: HttpClient, @Inject('BASE_URL') public baseUrl: string) { }
 
-  header = new HttpHeaders({
-    'Content-Type': 'application/json'
-  });
-
   headerOptions = {
-    headers: this.header
+    headers: new HttpHeaders({'Content-Type': 'application/json' })
   };
 
   ngOnInit() {
     console.log(this.baseUrl);
-
-    this.client.get<CreateUserViewModel[]>(this.baseUrl + 'api/Account/GetUsers').subscribe(result => {
-      this.models = result;
-    }, error => console.error(error));
   }
 
   onSubmit() {
     console.log("post");
     console.log(this.diagnostics)
-    this.client.post(this.baseUrl + 'api/Account/Create', this.diagnostics, this.headerOptions).subscribe(res => console.log(res));
+    this.client.post(this.baseUrl + 'api/Account/Create', this.diagnostics, this.headerOptions);
   }
 
 

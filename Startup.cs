@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,7 +38,7 @@ namespace Programming_Reference_Website
 
             services.AddDbContext<ProgrammingReferenceDbContext>(options => {
                 options.UseSqlServer("Server=localhost,5100;Database=SportsStore;User Id=sa;Password=mySecret123;MultipleActiveResultSets=true");
-            });
+            }, ServiceLifetime.Transient);
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -45,8 +46,14 @@ namespace Programming_Reference_Website
                 configuration.RootPath = "ClientApp/dist";
             });
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options => {
+               options.CookieName = "prog-ref-auth"; 
+               options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+            });
+
             services.AddScoped<IPasswordProtectionService, PasswordProtectionService>();
             services.AddTransient<IUnitOfWorkFactory, UnitOfWorkFactory>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             
         }
 
@@ -61,22 +68,7 @@ namespace Programming_Reference_Website
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
-            }            
-
-            var context = serviceProvider.GetService<ProgrammingReferenceDbContext>();
-
-            context.Users.Add(new User { Email = "test" });
-
-            context.SaveChanges();
-
-            Debug.WriteLine(context.Users.ToListAsync().Result[0].Email);
-
-            foreach(var user in context.Users.ToListAsync().Result)
-            {
-                context.Users.Remove(user);
-            }
-
-            context.SaveChanges();
+            }                        
             
 
             app.UseHttpsRedirection();
